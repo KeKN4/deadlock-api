@@ -24,7 +24,7 @@ let items = []; // сюда загружаются предметы с серв�
 // Функция загрузки предметов с Render API
 async function loadItems() {
   try {
-    const res = await fetch('https://deadlock-api.onrender.com/items'); // сюда вставь свой URL Render
+    const res = await fetch('https://ТВОЙ_URL_ON_RENDER/items'); // <- сюда вставь свой URL Render
     const data = await res.json();
     items = data;
     document.getElementById('status').innerText = `Загружено предметов: ${items.length}`;
