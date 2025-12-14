@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Deadlock Randomizer</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #1e1e1e; color: #fff; }
+    #items { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+    .item { display: flex; flex-direction: column; align-items: center; background: #2e2e2e; padding: 10px; border-radius: 8px; width: 100px; }
+    .item img { width: 64px; height: 64px; }
+    button { padding: 10px 20px; font-size: 16px; cursor: pointer; margin-top: 10px; }
+  </style>
+</head>
+<body>
+
+<h1>Deadlock Randomizer</h1>
+<p id="status">Загрузка предметов...</p>
+<button id="generate">Сгенерировать 10 предметов</button>
+<div id="items"></div>
+
+<script>
+let items = []; // сюда загружаются предметы с сервера
+
+// Функция загрузки предметов с Render API
+async function loadItems() {
+  try {
+    const res = await fetch('https://deadlock-api.onrender.com/items'); // сюда вставь свой URL Render
+    const data = await res.json();
+    items = data;
+    document.getElementById('status').innerText = `Загружено предметов: ${items.length}`;
+  } catch (e) {
+    console.error(e);
+    document.getElementById('status').innerText = '❌ Не удалось загрузить базу предметов (проверь интернет)';
+  }
+}
+
+// Функция генерации 10 случайных предметов
+function generateItems() {
+  if (!items.length) return;
+  const container = document.getElementById('items');
+  container.innerHTML = '';
+  const shuffled = [...items].sort(() => 0.5 - Math.random());
+  const selection = shuffled.slice(0, 10);
+  selection.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'item';
+    div.innerHTML = `
+      <img src="${item.img}" alt="${item.name}">
+      <span>${item.name}</span>
+    `;
+    container.appendChild(div);
+  });
+}
+
+// Привязка кнопки
+document.getElementById('generate').addEventListener('click', generateItems);
+
+// Загрузка предметов при открытии страницы
+loadItems();
+</script>
+
+</body>
+</html>
